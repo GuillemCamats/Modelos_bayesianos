@@ -39,6 +39,7 @@ def classify(list,learnig_path,testing_path,length,instances):
         for i in range(len(instances)-1):
             testing.write("@ATTRIBUTE "+str(instances[i])+" {"+str(nums).replace(' ','')+"}\n")
 
+        testing.write("@ATTRIBUTE Type {1,2,3,4,5,6,7}\n")
         testing.write("\n")
         testing.write("@DATA\n")
 
