@@ -4,7 +4,7 @@ import sys
 import os
 import random
 
-def classify(list,learnig_path,testing_path):
+def classify(list,learnig_path,testing_path,length,instances):
     learning_list = []
     testing_list = []
     random.seed(42287)
@@ -13,20 +13,16 @@ def classify(list,learnig_path,testing_path):
             learning_list.append(sublist)
         else:
             testing_list.append(sublist)
-
+    nums = [ j+1 for j in range(int(length))]
+    nums = str(nums)[1 : -1]
     with open(learnig_path, "w") as learning:
         learning.write("@RELATION learning\n")
         learning.write("\n")
-        learning.write("@ATTRIBUTE RI {1,2,3,4,5,6,7,8}\n")
-        learning.write("@ATTRIBUTE Na {1,2,3,4,5,6,7,8}\n")
-        learning.write("@ATTRIBUTE Mg {1,2,3,4,5,6,7,8}\n")
-        learning.write("@ATTRIBUTE Al {1,2,3,4,5,6,7,8}\n")
-        learning.write("@ATTRIBUTE Si {1,2,3,4,5,6,7,8}\n")
-        learning.write("@ATTRIBUTE K {1,2,3,4,5,6,7,8}\n")
-        learning.write("@ATTRIBUTE Ca {1,2,3,4,5,6,7,8}\n")
-        learning.write("@ATTRIBUTE Ba {1,2,3,4,5,6,7,8}\n")
-        learning.write("@ATTRIBUTE Fe {1,2,3,4,5,6,7,8}\n")
-        learning.write("@ATTRIBUTE Type {1,2,3,4,5,6,7,8}\n")
+
+        for i in range(len(instances)-1):
+            learning.write("@ATTRIBUTE "+str(instances[i])+" {"+str(nums).replace(' ','')+"}\n")
+
+        learning.write("@ATTRIBUTE Type {1,2,3,4,5,6,7}\n")
         learning.write("\n")
         
         learning.write("@DATA\n")
@@ -39,16 +35,10 @@ def classify(list,learnig_path,testing_path):
     with open(testing_path, "w") as testing:
         testing.write("@RELATION testing\n")
         testing.write("\n")
-        testing.write("@ATTRIBUTE RI {1,2,3,4,5,6,7,8}\n")
-        testing.write("@ATTRIBUTE Na {1,2,3,4,5,6,7,8}\n")
-        testing.write("@ATTRIBUTE Mg {1,2,3,4,5,6,7,8}\n")
-        testing.write("@ATTRIBUTE Al {1,2,3,4,5,6,7,8}\n")
-        testing.write("@ATTRIBUTE Si {1,2,3,4,5,6,7,8}\n")
-        testing.write("@ATTRIBUTE K {1,2,3,4,5,6,7,8}\n")
-        testing.write("@ATTRIBUTE Ca {1,2,3,4,5,6,7,8}\n")
-        testing.write("@ATTRIBUTE Ba {1,2,3,4,5,6,7,8}\n")
-        testing.write("@ATTRIBUTE Fe {1,2,3,4,5,6,7,8}\n")
-        testing.write("@ATTRIBUTE Type {1,2,3,4,5,6,7,8}\n")
+
+        for i in range(len(instances)-1):
+            testing.write("@ATTRIBUTE "+str(instances[i])+" {"+str(nums).replace(' ','')+"}\n")
+
         testing.write("\n")
         testing.write("@DATA\n")
 
@@ -69,15 +59,18 @@ def orderLists(list):
 
     return orderedList
 
+def deleteDuplicates(x):
+  return list(dict.fromkeys(x))
 
-def discreetDomain(atributs):
+
+def discreetDomain(atributs,length):
     discreetList = [[] for _ in range(10)]
     i = 0
     for list in atributs:
-        lenl = len(list)/8
         sortedList = list.copy()
         sortedList.sort()
-        dividedList= [sortedList[i:i+int(lenl)+1] for i in range(0, len(sortedList), int(lenl)+1)]
+        sortedList = deleteDuplicates(sortedList)
+        dividedList= [sortedList[i:i+int(len(sortedList)/int(length))+1] for i in range(0, len(sortedList), int(len(sortedList)/int(length))+1)]
         for elem in list:
             x = 1
             for dlist in dividedList:
@@ -117,7 +110,7 @@ def openAndCsstoArff(css_path):
         atributs.append(Fe)
         atributs.append(Type)
     
-    return atributs
+    return atributs, instances
 
 
 
@@ -132,9 +125,9 @@ if __name__ == '__main__':
         sys.exit("ERROR: CNF file %s does not exist." % css_path)
     learnig_path = sys.argv[2]
     testing_path = sys.argv[3]
-
+    length = sys.argv[4]
     
-    atributs= openAndCsstoArff(css_path)
-    discretList = discreetDomain(atributs)
+    atributs, instances= openAndCsstoArff(css_path)
+    discretList = discreetDomain(atributs,length)
     finalDiscretList = orderLists(discretList)
-    classify(finalDiscretList,learnig_path,testing_path)
+    classify(finalDiscretList,learnig_path,testing_path,length,instances)
