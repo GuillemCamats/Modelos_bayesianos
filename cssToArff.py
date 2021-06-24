@@ -8,8 +8,8 @@ import random
 # i escriu el que correspont a cada fitxer. 
 
 def writeOnArff(path,nums,instances,file_list):
-    with open(path, "w") as file:
-        file.write("@RELATION file\n")
+    with open(path, "w") as file: 
+        file.write("@RELATION file\n") # la funcio write escriu al fitxer que tinguem obert en aquell moment
         file.write("\n")
 
         for i in range(len(instances)-1):
@@ -35,7 +35,7 @@ def split7525(list,learnig_path,testing_path,argval,instances):
     testing_list = []
     random.seed(42287)
     for sublist in list:
-        if random.randint(1,100) < 75: 
+        if random.randint(1,100) < 75: # tria un numero random entre 1 i 100
             learning_list.append(sublist)
         else:
             testing_list.append(sublist)
@@ -85,7 +85,7 @@ def discreetDomain(atributs,argval):
     discreetList = [[] for _ in range(9)]
     i = 0
     for list in atributs:
-        sortedList = list.copy()
+        sortedList = list.copy() # copiar una llista
         sortedList.sort() # ordenar
         sortedList = deleteDuplicates(sortedList) #eliminar repetits
         # dividir la list en tantes subllistes com el numero argval
@@ -112,9 +112,9 @@ def openAndRead(css_path):
     with open(css_path) as css:
         RI,Na,Mg,Al,Si,K,Ca,Ba,Fe,Type, atributs= ([] for i in range(11))
         
-        instances = css.readline().split(',')
+        instances = css.readline().split(',') # split es per separar per el parametre dins del parentesis
         for line in css:
-            values = line.strip().split(',')
+            values = line.strip().split(',') # strip es per remoure els espais al començament i al final de una string
             RI.append(values[0])
             Na.append(values[1])
             Mg.append(values[2])
@@ -140,7 +140,7 @@ def openAndRead(css_path):
 
         
 if __name__ == '__main__':
-    if len(sys.argv) != 5:
+    if len(sys.argv) != 5: # sys.argv controla els arguments que es passen per parametre
         sys.stderr.write("ERROR: Incorrect number of arguments. Given %s. Expected 4.\n" %
                          len(sys.argv))
     
