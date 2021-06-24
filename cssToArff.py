@@ -13,7 +13,7 @@ def writeOnArff(path,nums,instances,file_list):
         file.write("\n")
 
         for i in range(len(instances)-1):
-            file.write("@ATTRIBUTE "+str(instances[i])+" {"+str(nums).replace(' ','')+"}\n")
+            file.write("@ATTRIBUTE "+str(instances[i])+" {"+str(nums).replace(' ','')+"}\n")# replace, substitueix una cosa per una altra
 
         file.write("@ATTRIBUTE Type {1,2,3,4,5,6,7}\n")
         file.write("\n")
